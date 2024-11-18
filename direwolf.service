@@ -1,0 +1,27 @@
+# Write this file in /etc/systemd/system/direwolf.service
+# This file allows systemd to control the direwolf service rather than rely on a cron job
+# I used screen to allow the process to run in the background
+# Direwolf is not supposed to run as root, so the service is told who to run under
+#   Note, systemctl commands are run as root or sudo user, but the service will run under user context
+# Attach to the screen with 'screen -r direwolf' (assuming the configuration of the -S is direwolf)
+# Detach from the screen with 'ctrl-a d'
+# Use standard systemd commands to:
+#   enable (systemctl enable direwolf.service)
+#   disable (systemctl enable direwolf.service)
+#   status (systemctl status direwolf.service)
+#   start (systemctl start direwolf.service)
+#   stop (systemctl stop direwolf.service)
+
+[Unit]
+Description=DireWolf
+After=network.target
+
+[Service]
+Type=forking
+User=arombaut
+WorkingDirectory=/home/arombaut
+ExecStart=/usr/bin/screen -S direwolf -d -m /usr/local/bin/direwolf -c /home/arombaut/direwolf.conf
+Restart=always
+
+[Install]
+WantedBy=default.target
